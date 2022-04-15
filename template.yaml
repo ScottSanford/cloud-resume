@@ -1,0 +1,137 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app-hello-world
+
+  Sample SAM Template for sam-app-hello-world
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  MyResumeWebsite:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      BucketName: scott-sanford-resume
+
+  BucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      PolicyDocument:
+        Id: MyPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: !Join
+              - ""
+              - - "arn:aws:s3:::"
+                - !Ref MyResumeWebsite
+                - /*
+      Bucket: !Ref MyResumeWebsite
+
+  ResumeCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - resume.scottsanford.io
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: match-viewer
+            DomainName: scott-sanford-resume.s3.us-east-1.amazonaws.com
+            Id: scott-sanford-resume.s3-website-us-east-1.amazonaws.com
+        Enabled: "true"
+        Comment: CloudFront distribution for my resume site
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: scott-sanford-resume.s3-website-us-east-1.amazonaws.com
+          ViewerProtocolPolicy: allow-all
+          DefaultTTL: 0
+          MinTTL: 0
+          MaxTTL: 0
+          ForwardedValues:
+            QueryString: false
+        ViewerCertificate:
+          AcmCertificateArn: !Ref MyCertificate
+          SslSupportMethod: sni-only
+
+  MyRoute53Record:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      HostedZoneId: Z0700654CIOR7MZZYAUR
+      RecordSets:
+        - Name: resume.scottsanford.io
+          Type: A
+          AliasTarget:
+            HostedZoneId: Z2FDTNDATAQYW2
+            DNSName: !GetAtt ResumeCloudFrontDistribution.DomainName
+
+  MyCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: resume.scottsanford.io
+      ValidationMethod: DNS
+
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get-function/
+      Handler: app.getHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /get
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: cloud-resume-challenge
+
+  PutFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: put-function/
+      Handler: app.putHandler
+      Runtime: nodejs14.x
+      Architectures:
+        - x86_64
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /put
+            Method: put
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: cloud-resume-challenge
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cloud-resume-challenge
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: "ID"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "ID"
+          KeyType: "HASH"
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  CounterApi:
+    Description: "API Gateway endpoint URL for Prod stage for GET function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

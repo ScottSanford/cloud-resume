@@ -1,0 +1,13 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "resume-app"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-j9zd757yj27l"
+s3_prefix = "resume-app"
+region = "us-east-1"
+profile = "iamadmin-general"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []
