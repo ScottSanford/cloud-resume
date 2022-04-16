@@ -243,4 +243,5 @@ $RECYCLE.BIN/
 
 notes.txt
 /frontend/node_modules/*
+/frontend/build
 # End of https://www.gitignore.io/api/osx,linux,python,windows,pycharm,visualstudiocode
