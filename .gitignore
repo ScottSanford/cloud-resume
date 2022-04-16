@@ -241,7 +241,7 @@ $RECYCLE.BIN/
 
 */build/*
 
-.aws-sam
+.aws-sam/*
 notes.txt
 /frontend/node_modules/*
 /frontend/build
