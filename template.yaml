@@ -14,10 +14,13 @@ Resources:
   MyResumeWebsite:
     Type: AWS::S3::Bucket
     Properties:
-      AccessControl: PublicRead
+      AccessControl: Private
       WebsiteConfiguration:
         IndexDocument: index.html
       BucketName: scott-sanford-resume
+      Tags:
+        - Key: description
+          Value: "Private files"
 
   BucketPolicy:
     Type: "AWS::S3::BucketPolicy"
@@ -26,15 +29,11 @@ Resources:
         Id: MyPolicy
         Version: 2012-10-17
         Statement:
-          - Sid: PublicReadForGetBucketObjects
-            Effect: Allow
-            Principal: "*"
-            Action: "s3:GetObject"
-            Resource: !Join
-              - ""
-              - - "arn:aws:s3:::"
-                - !Ref MyResumeWebsite
-                - /*
+          - Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}'
+            Action: 's3:GetObject'
+            Resource: arn:aws:s3:::scott-sanford-resume/*
       Bucket: !Ref MyResumeWebsite
 
   ResumeCloudFrontDistribution:
@@ -44,24 +43,32 @@ Resources:
         Aliases:
           - resume.scottsanford.io
         Origins:
-          - CustomOriginConfig:
-              OriginProtocolPolicy: match-viewer
-            DomainName: scott-sanford-resume.s3.us-east-1.amazonaws.com
-            Id: scott-sanford-resume.s3-website-us-east-1.amazonaws.com
+          - DomainName: scott-sanford-resume.s3.amazonaws.com
+            Id: S3-private-resume-bucket
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginIdentity}'
         Enabled: "true"
         Comment: CloudFront distribution for my resume site
         DefaultRootObject: index.html
         DefaultCacheBehavior:
-          TargetOriginId: scott-sanford-resume.s3-website-us-east-1.amazonaws.com
-          ViewerProtocolPolicy: allow-all
-          DefaultTTL: 0
-          MinTTL: 0
-          MaxTTL: 0
+          AllowedMethods:
+            - GET
+            - HEAD
+          TargetOriginId: S3-private-resume-bucket
           ForwardedValues:
-            QueryString: false
+            QueryString: 'false'
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
         ViewerCertificate:
           AcmCertificateArn: !Ref MyCertificate
           SslSupportMethod: sni-only
+
+  CloudFrontOriginIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: 'origin identity'
 
   MyRoute53Record:
     Type: "AWS::Route53::RecordSetGroup"
