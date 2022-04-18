@@ -23,7 +23,7 @@ env:
   # TESTING_IMAGE_REPOSITORY = '0123456789.dkr.ecr.region.amazonaws.com/repository-name'
   TESTING_REGION: us-east-1
   PROD_STACK_NAME: sam-app
-  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::263854930256:role/aws-sam-cli-managed-prod-pip-PipelineExecutionRole-1NZDAWP1C6BLS
+  PROD_PIPELINE_EXECUTION_ROLE: arn:aws:iam::263854930256:role/aws-sam-cli-managed-dev-p-CloudFormationExecutionR-5E8IQQUL7W3F
   PROD_CLOUDFORMATION_EXECUTION_ROLE: arn:aws:iam::263854930256:role/aws-sam-cli-managed-prod-CloudFormationExecutionR-1FABIE4TI4Q3D
   PROD_ARTIFACTS_BUCKET: aws-sam-cli-managed-prod-pipeline-artifactsbucket-o1p5zjjomeo
   # If there are functions with "Image" PackageType in your template,
