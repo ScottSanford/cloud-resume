@@ -25,35 +25,17 @@ jobs:
   build-and-deploy:
     needs: test
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
-      - name: Checkout branch
-        uses: actions/checkout@v3
-
-      - name: Use Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.8"
-
-      - name: Add profile credentials to ~/.aws/credentials
-        run: |
-            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile iamadmin-general
-            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile iamadmin-general
-
-      - name: Setup AWS SAM
-        uses: aws-actions/setup-sam@v1
-
-      - name: Setup AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-          role-session-name: deploying-app
-
-      - run: |
-          sam build
-          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+    - uses: aws-actions/setup-sam@v1
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+    - run: sam build
+      working-directory: cloud-resume
+    - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+      working-directory: cloud-resume
