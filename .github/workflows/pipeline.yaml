@@ -164,6 +164,9 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: [build-and-package]
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -192,7 +195,6 @@ jobs:
             --s3-bucket ${TESTING_ARTIFACTS_BUCKET} \
             --no-fail-on-empty-changeset \
             --role-arn ${TESTING_CLOUDFORMATION_EXECUTION_ROLE}
-            --profile iamadmin-general
 
   integration-test:
     if: github.ref == 'refs/heads/main'
