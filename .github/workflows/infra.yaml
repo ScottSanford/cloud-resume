@@ -1,0 +1,54 @@
+name: Infrastructure Test, Build, & Deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION : "us-east-1"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "12.x"
+      - run: npm ci
+      - run: npm test
+
+  build-and-deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+
+      - name: Use Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.8"
+
+      - name: Setup AWS SAM
+        uses: aws-actions/setup-sam@v1
+
+      - name: Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: deploySam
+          aws-region: ${{ env.AWS_REGION }}
+
+      - run: sam build
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
