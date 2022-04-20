@@ -76,8 +76,8 @@ jobs:
     needs: [test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
       - uses: aws-actions/setup-sam@v1
       - run: sam build --template ${SAM_TEMPLATE} --use-container
 
@@ -164,9 +164,6 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: [build-and-package]
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
@@ -175,16 +172,20 @@ jobs:
         with:
           name: packaged-testing.yaml
 
-      - name: Assume the testing pipeline user role
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.TESTING_REGION }}
-          role-to-assume: ${{ env.TESTING_PIPELINE_EXECUTION_ROLE }}
-          role-session-name: testing-deployment
-          role-duration-seconds: 3600
-          role-skip-session-tagging: true
+      - name: Add profile credentials to ~/.aws/credentials
+        run: |
+            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile cloud-resume-project
+            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile cloud-resume-project
+      # - name: Assume the testing pipeline user role
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ env.PIPELINE_USER_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ env.PIPELINE_USER_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ env.TESTING_REGION }}
+      #     role-to-assume: ${{ env.TESTING_PIPELINE_EXECUTION_ROLE }}
+      #     role-session-name: testing-deployment
+      #     role-duration-seconds: 3600
+      #     role-skip-session-tagging: true
 
       - name: Deploy to testing account
         run: |
