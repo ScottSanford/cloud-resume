@@ -40,7 +40,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
     - run: |
-        cd frontend && npm run build
+        cd frontend && && npm ci && npm run build
 
     # Upload to S3
     - name: sync s3
