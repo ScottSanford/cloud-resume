@@ -20,7 +20,7 @@ Resources:
       BucketName: sanford-cloud-resume
       Tags:
         - Key: description
-          Value: "Private files"
+          Value: "Private S3 Bucket with static files"
 
   BucketPolicy:
     Type: "AWS::S3::BucketPolicy"
@@ -87,7 +87,7 @@ Resources:
       DomainName: resume.scottsanford.io
       ValidationMethod: DNS
 
-  GetFunction:
+  GetLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: get-function/
@@ -105,7 +105,7 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: CloudResumeTable
 
-  PutFunction:
+  PutLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: put-function/
