@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  AWS_REGION : "us-east-1"
+  AWS_REGION : 'us-east-1'
 
 jobs:
   test:
@@ -18,7 +18,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "12.x"
+          node-version: '12.x'
       - run: |
           cd frontend && npm ci && npm test
 
@@ -39,6 +39,25 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
-    - run: |
-        aws cloudfront create-invalidation --distribution-id E1KJNLKEVWSJ2I --profile iamadmin-general
-        cd frontend && npm ci && npm run deploy
+
+    # Upload to S3
+    - name: sync s3
+      uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --exclude '.git*/*' --delete --follow-symlinks
+      env:
+        SOURCE_DIR: './frontend/build'
+        AWS_REGION: 'us-east-1'
+        AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+
+    - name: Invalidate CloudFront
+      uses: chetan/invalidate-cloudfront-action@v2
+      env:
+        DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        PATHS: /index.html /static/*
+        AWS_REGION: 'us-east-1'
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
