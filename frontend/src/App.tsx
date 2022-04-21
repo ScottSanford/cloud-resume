@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
 
-const API_URL = 'https://xw8i25bu04.execute-api.us-east-1.amazonaws.com/Prod/get'
+const API_URL = ' https://x534x9hk9k.execute-api.us-east-1.amazonaws.com/Prod/get'
 
 function App() {
 
