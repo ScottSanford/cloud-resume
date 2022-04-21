@@ -2,7 +2,7 @@ const AWS = require('aws-sdk')
 const documentClient = new AWS.DynamoDB.DocumentClient()
 
 const params = {
-	TableName: 'cloud-resume-challenge',
+	TableName: 'CloudResumeTable',
 	Key: { 'ID': 'homePage' },
 	UpdateExpression: 'set visitorCount = visitorCount + :inc',
 	ExpressionAttributeValues: { ':inc': 1 },

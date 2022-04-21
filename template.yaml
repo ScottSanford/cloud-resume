@@ -17,7 +17,7 @@ Resources:
       AccessControl: Private
       WebsiteConfiguration:
         IndexDocument: index.html
-      BucketName: scott-sanford-resume
+      BucketName: sanford-cloud-resume
       Tags:
         - Key: description
           Value: "Private files"
@@ -33,7 +33,7 @@ Resources:
             Principal:
               AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}'
             Action: 's3:GetObject'
-            Resource: arn:aws:s3:::scott-sanford-resume/*
+            Resource: arn:aws:s3:::sanford-cloud-resume/*
       Bucket: !Ref MyResumeWebsite
 
   ResumeCloudFrontDistribution:
@@ -43,7 +43,7 @@ Resources:
         Aliases:
           - resume.scottsanford.io
         Origins:
-          - DomainName: scott-sanford-resume.s3.amazonaws.com
+          - DomainName: sanford-cloud-resume.s3.amazonaws.com
             Id: S3-private-resume-bucket
             S3OriginConfig:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginIdentity}'
@@ -103,7 +103,7 @@ Resources:
             Method: get
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: cloud-resume-challenge
+            TableName: CloudResumeTable
 
   PutFunction:
     Type: AWS::Serverless::Function
@@ -121,12 +121,12 @@ Resources:
             Method: put
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: cloud-resume-challenge
+            TableName: CloudResumeTable
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: cloud-resume-challenge
+      TableName: CloudResumeTable
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: "ID"
