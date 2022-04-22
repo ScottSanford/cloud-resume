@@ -3,6 +3,7 @@ name: Cloud Resume Frontend
 on:
   push:
     branches: [main]
+    paths: [./frontend/*]
 
 env:
   AWS_REGION : 'us-east-1'
