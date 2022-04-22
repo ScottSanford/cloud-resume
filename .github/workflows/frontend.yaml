@@ -29,8 +29,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-    - uses: aws-actions/setup-sam@v1
     - name: Add profile credentials to ~/.aws/credentials
       run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile iamadmin-general
@@ -43,11 +41,10 @@ jobs:
     - run: |
         cd frontend && npm ci && npm run build
 
-    # Upload to S3
-    - name: sync s3
+    - name: Upload to S3 Bucket
       uses: jakejarvis/s3-sync-action@master
       with:
-        args: --exclude '.git*/*' --delete --follow-symlinks
+        args: --delete --follow-symlinks
       env:
         SOURCE_DIR: './frontend/build'
         AWS_REGION: 'us-east-1'
@@ -56,7 +53,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 
-    - name: Invalidate CloudFront
+    - name: Invalidate CloudFront Cache
       uses: chetan/invalidate-cloudfront-action@v2
       env:
         DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
