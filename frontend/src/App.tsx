@@ -9,14 +9,14 @@ const API_URL = 'https://x534x9hk9k.execute-api.us-east-1.amazonaws.com/Prod/get
 function App() {
 
   const [visitorCount, setVisitorCount] = useState<number>()
-  const isInitialRender = useRef(true)
+  // const isInitialRender = useRef(true)
 
   useEffect(() => {
     // prevent useEffect from being called twice
-    if (isInitialRender.current) {
-      isInitialRender.current = false
-      return
-    }
+    // if (isInitialRender.current) {
+    //   isInitialRender.current = false
+    //   return
+    // }
     fetch(API_URL)
       .then((response) => response.json())
       .then((document) => {
