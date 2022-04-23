@@ -5,7 +5,7 @@ import css from './Position.module.css'
 const Position: React.FC = () => {
   return (
     <div className={css.container}>
-		Position goes here
+		Position goes here!!!
 	</div>
   )
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import Position from '../Position/Position'
 import css from './Resume.module.css'
 
 
@@ -6,9 +7,8 @@ const Resume: React.FC = () => {
   return (
     <div className={css.container}>
       <section className={css.section}>
-        <div className={css.sectionInner}>
           <h1>Scott <span className={css.lastName}>Sanford</span></h1>
-          <div className={css.subHeading}>Chicago</div>
+          <div className={css.subHeading}>Chicago, IL</div>
           <p className={css.paragraphText}>
             Ever since I was a little kid, I loved taking blocks and building something creative with them.
             I knew from an early age I wanted to become an engineer.
@@ -34,10 +34,12 @@ const Resume: React.FC = () => {
             fantasy football or cheering on the Chicago Bears.
           </p>
           <p className={css.paragraphText}>Visits: 5365</p>
-        </div>
-        <div className={css.socialIcons}>
+          <div className={css.socialIcons}></div>
+      </section>
 
-        </div>
+      <section className={css.section}>
+        <h2>Experience</h2>
+        <Position />
       </section>
     </div>
   )

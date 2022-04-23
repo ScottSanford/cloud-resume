@@ -67,6 +67,13 @@ h1 {
   text-transform: uppercase;
 }
 
+h2 {
+  font-family: 'Bitter';
+  font-size: 4rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
 p {
   font-family: 'Open Sans', sans-serif;
   font-size: var(--default-font-size);

@@ -8,7 +8,7 @@ const Sidebar: React.FC = () => {
   return (
     <nav className={css.container}>
       <div className={css.imageContainer}>
-        <img src={profile} className={css.image} />
+        <img src={profile} className={css.image} alt='profile' />
       </div>
       <div>
       <ul className={css.navList}>
