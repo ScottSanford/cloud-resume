@@ -1,6 +1,6 @@
 import React from 'react'
 import css from './Education.module.css'
-import { College } from './education'
+import { College } from './college'
 
 interface EducationProps {
   education: College
@@ -17,9 +17,9 @@ const Education: React.FC<EducationProps> = ({ education }) => {
       </div>
       <div>
         <h3 className={css.title}>{education.title}</h3>
+        <div className={css.company}>{education.major}, {education.degree}</div>
         <div className={css.date}>{education.date}</div>
 
-        <div className={css.company}>{education.major}, {education.degree}</div>
         <ul className={css.list}>
           {bulletPoints}
         </ul>

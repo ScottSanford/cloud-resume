@@ -1,1 +1,1 @@
-export * from './Ediucation'
+export * from './Education'

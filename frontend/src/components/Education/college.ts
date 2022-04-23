@@ -9,7 +9,7 @@ export interface College {
 	activities: string[]
 }
 
-export const education: College = {
+export const collegeExperience: College = {
 	title: 'Lake Forest College',
 	degree: 'Bachelor of Science',
 	major: 'Business',

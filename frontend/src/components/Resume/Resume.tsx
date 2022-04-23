@@ -4,9 +4,10 @@ import { positions } from '../Experience/positions'
 import css from './Resume.module.css'
 import SACert from '../../img/solutions-architect-cert.png'
 import DeveloperCert from '../../img/developer-cert.png'
-import Education from '../Education/Ediucation'
-import { education } from '../Education/education'
+import Education from '../Education/Education'
 import Skills from '../Skills/Skills'
+import { collegeExperience } from '../Education/college'
+import { Element } from 'react-scroll'
 
 interface ResumeProps {
   visits?: number
@@ -15,7 +16,7 @@ interface ResumeProps {
 const Resume: React.FC<ResumeProps> = ({ visits }) => {
   return (
     <div className={css.container}>
-      <section className={css.section}>
+      <Element className={css.section} name='about'>
           <h1>Scott <span className={css.lastName}>Sanford</span></h1>
           <div className={css.subHeading}>Chicago, IL</div>
           <p className={css.paragraphText}>
@@ -44,30 +45,30 @@ const Resume: React.FC<ResumeProps> = ({ visits }) => {
           </p>
           <p className={css.paragraphText}>Visits: <b>{visits}</b></p>
           <div className={css.socialIcons}></div>
-      </section>
+      </Element>
 
-      <section className={css.section}>
+      <Element className={css.section} name='experience'>
         <h2 className={css.experience}>Experience</h2>
         {positions.map((position) => <Experience key={position.date} position={position} />)}
-      </section>
+      </Element>
 
-      <section className={css.section}>
+      <Element className={css.section} name='education'>
         <h2 className={css.experience}>Education</h2>
-        <Education education={education} />
-      </section>
+        <Education education={collegeExperience} />
+      </Element>
 
-      <section className={css.section}>
+      <Element className={css.section} name='skills'>
         <h2 className={css.experience}>Skills</h2>
         <Skills />
-      </section>
+      </Element>
 
-      <section className={css.section}>
+      <Element className={css.section} name='certifications'>
         <h2 className={css.experience}>Certifications</h2>
         <div className={css.certs}>
           <img src={SACert} alt='AWS Solutions Architect - Associate Certification' />
           <img src={DeveloperCert} alt='AWS Developer - Associate Certification' />
         </div>
-      </section>
+      </Element>
     </div>
   )
 }

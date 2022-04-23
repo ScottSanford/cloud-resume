@@ -1,8 +1,11 @@
 import React from 'react'
 import css from './Sidebar.module.css'
-import classNames from 'classnames'
 import profile from '../../img/profile.jpeg'
+import { Link } from 'react-scroll'
 
+const SMOOTH_VALUE = 'easeInOutQuart'
+const OFFSET = 50
+const DURATION = 1000
 
 const Sidebar: React.FC = () => {
   return (
@@ -12,11 +15,11 @@ const Sidebar: React.FC = () => {
       </div>
       <div>
       <ul className={css.navList}>
-          <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger', 'active')} href="#about">About</a></li>
-          <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#experience">Experience</a></li>
-          <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#education">Education</a></li>
-          <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#skills">Skills</a></li>
-          <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#certifications">Certifications</a></li>
+          <li className={css.navItem}><Link to='about' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>About</Link></li>
+          <li className={css.navItem}><Link to='experience' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Experience</Link></li>
+          <li className={css.navItem}><Link to='education' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Education</Link></li>
+          <li className={css.navItem}><Link to='skills' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Skills</Link></li>
+          <li className={css.navItem}><Link to='certifications' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Certifications</Link></li>
       </ul>
       </div>
     </nav>
