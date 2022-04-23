@@ -4,9 +4,15 @@ import { positions } from '../Experience/positions'
 import css from './Resume.module.css'
 import SACert from '../../img/solutions-architect-cert.png'
 import DeveloperCert from '../../img/developer-cert.png'
+import Education from '../Education/Ediucation'
+import { education } from '../Education/education'
+import Skills from '../Skills/Skills'
 
+interface ResumeProps {
+  visits?: number
+}
 
-const Resume: React.FC = () => {
+const Resume: React.FC<ResumeProps> = ({ visits }) => {
   return (
     <div className={css.container}>
       <section className={css.section}>
@@ -36,7 +42,7 @@ const Resume: React.FC = () => {
             shopping list app for us (we still forget items). If I am not coding, I am probably playing
             fantasy football or cheering on the Chicago Bears.
           </p>
-          <p className={css.paragraphText}>Visits: 5365</p>
+          <p className={css.paragraphText}>Visits: <b>{visits}</b></p>
           <div className={css.socialIcons}></div>
       </section>
 
@@ -47,10 +53,12 @@ const Resume: React.FC = () => {
 
       <section className={css.section}>
         <h2 className={css.experience}>Education</h2>
+        <Education education={education} />
       </section>
 
       <section className={css.section}>
         <h2 className={css.experience}>Skills</h2>
+        <Skills />
       </section>
 
       <section className={css.section}>

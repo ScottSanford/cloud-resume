@@ -23,11 +23,6 @@
 
   /* Font Size */
   --default-font-size: 1.6rem;
-
-
-  /* Border Radius */
-  --border-radius-small: .3rem;
-  --border-radius-large: 10rem;
 }
 
 * {

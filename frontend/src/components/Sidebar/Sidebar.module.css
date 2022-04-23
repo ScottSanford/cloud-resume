@@ -10,6 +10,12 @@
     width: 275px;
 }
 
+@media only screen and (max-width: 59.357em) {
+	.container {
+		display: none;
+	}
+}
+
 .imageContainer {
 	border: 0.75rem solid rgba(255, 255, 255, 0.2);
 	border-radius: 50%;
