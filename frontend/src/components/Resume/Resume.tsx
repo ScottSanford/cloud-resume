@@ -1,5 +1,6 @@
 import React from 'react'
-import Position from '../Position/Position'
+import Experience from '../Experience/Experience'
+import { positions } from '../Experience/positions'
 import css from './Resume.module.css'
 
 
@@ -38,8 +39,9 @@ const Resume: React.FC = () => {
       </section>
 
       <section className={css.section}>
-        <h2>Experience</h2>
-        <Position />
+        <h2 className={css.experience}>Experience</h2>
+        {positions.map((position) => <Experience key={position.date} position={position} />)}
+
       </section>
     </div>
   )
