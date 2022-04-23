@@ -1,0 +1,71 @@
+.container {
+	padding-left: 25rem;
+}
+
+.lastName {
+	color: var(--color-primary-dark);
+	font-weight: 700;
+}
+
+.subHeading {
+	font-family: 'Bitter';
+	font-size: 2rem;
+	margin-bottom: 5rem;
+}
+
+.section {
+	padding: 10rem 15rem 10rem 7rem;
+}
+
+.section:not(:last-of-type) {
+	border-bottom: 2px solid var(--color-grey-light-2);
+}
+
+.paragraphText {
+	margin: 1.2rem 0;
+	line-height: 1.6;
+}
+
+.experience {
+	margin-bottom: 3rem;
+}
+
+.certs {
+	display: flex;
+}
+
+.certs img {
+	max-width: 150px;
+}
+
+@media only screen and (min-width: 59.357em) {
+	.section {
+		padding-right: 30rem;
+	}
+}
+
+@media only screen and (min-width: 50em) {
+	.section {
+		padding-right: 15rem;
+	}
+}
+
+@media only screen and (max-width: 59.357em) {
+	.container {
+		padding-left: 5rem;
+	}
+
+	.section {
+		padding: 15rem 12rem 7rem 4rem;
+	}
+}
+
+@media only screen and (max-width: 40em) {
+	.container {
+		padding-left: 0;
+	}
+
+	.section {
+		padding: 3rem;
+	}
+}
