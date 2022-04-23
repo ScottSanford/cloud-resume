@@ -3,14 +3,16 @@ const documentClient = new AWS.DynamoDB.DocumentClient()
 
 const params = {
 	TableName: 'CloudResumeTable',
-	Key: {
-		'ID': 'homePage'
-	}
+	Key: { 'ID': 'homePage' },
+	UpdateExpression: 'set visitorCount = visitorCount + :inc',
+	ExpressionAttributeValues: { ':inc': 1 },
+	ReturnValues: 'UPDATED_NEW'
 }
 
 exports.getHandler = async function () {
 	try {
-		const response = await documentClient.get(params).promise()
+		const response = await documentClient.update(params).promise()
+
 		return {
 			statusCode: 200,
 			headers: {
@@ -20,10 +22,11 @@ exports.getHandler = async function () {
 			},
 			body: JSON.stringify(response)
 		}
+
 	} catch (error) {
 		return {
 			statusCode: 500,
-			body: JSON.stringify(error)
+			body: error
 		}
 	}
 }

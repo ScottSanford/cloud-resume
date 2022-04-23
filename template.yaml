@@ -105,24 +105,6 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: CloudResumeTable
 
-  PutLambdaFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: put-function/
-      Handler: app.putHandler
-      Runtime: nodejs14.x
-      Architectures:
-        - x86_64
-      Events:
-        ApiEvent:
-          Type: Api
-          Properties:
-            Path: /put
-            Method: put
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: CloudResumeTable
-
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
