@@ -55,7 +55,7 @@ export const positions: Position[] = [
 		companyImage: mediaflyLogo,
 		date: 'Jun 2016 - Dec 2017',
 		description: [
-			'Guided Sales Department in customer meetings about technical matters about the company\’s Extension platform',
+			'Guided Sales Department in customer meetings about technical matters about the company’s Extension platform',
 			'Captured and implemented designs created by the UI team, added new functionality, enhancements, and improvements to Extensions platform',
 		]
 	},
