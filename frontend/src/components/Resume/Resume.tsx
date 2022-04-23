@@ -2,6 +2,8 @@ import React from 'react'
 import Experience from '../Experience/Experience'
 import { positions } from '../Experience/positions'
 import css from './Resume.module.css'
+import SACert from '../../img/solutions-architect-cert.png'
+import DeveloperCert from '../../img/developer-cert.png'
 
 
 const Resume: React.FC = () => {
@@ -41,7 +43,22 @@ const Resume: React.FC = () => {
       <section className={css.section}>
         <h2 className={css.experience}>Experience</h2>
         {positions.map((position) => <Experience key={position.date} position={position} />)}
+      </section>
 
+      <section className={css.section}>
+        <h2 className={css.experience}>Education</h2>
+      </section>
+
+      <section className={css.section}>
+        <h2 className={css.experience}>Skills</h2>
+      </section>
+
+      <section className={css.section}>
+        <h2 className={css.experience}>Certifications</h2>
+        <div className={css.certs}>
+          <img src={SACert} alt='AWS Solutions Architect - Associate Certification' />
+          <img src={DeveloperCert} alt='AWS Developer - Associate Certification' />
+        </div>
       </section>
     </div>
   )

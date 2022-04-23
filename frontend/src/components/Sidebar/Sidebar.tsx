@@ -17,7 +17,6 @@ const Sidebar: React.FC = () => {
           <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#education">Education</a></li>
           <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#skills">Skills</a></li>
           <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#certifications">Certifications</a></li>
-          <li className={css.navItem}><a className={classNames(css.navLink, 'js-scroll-trigger')} href="#articles">Articles</a></li>
       </ul>
       </div>
     </nav>

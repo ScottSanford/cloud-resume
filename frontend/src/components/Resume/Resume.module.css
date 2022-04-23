@@ -26,3 +26,11 @@
 .experience {
 	margin-bottom: 3rem;
 }
+
+.certs {
+	display: flex;
+}
+
+.certs img {
+	max-width: 150px;
+}
