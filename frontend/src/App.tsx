@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import Main from './components/Main/Main'
+import Resume from './components/Resume/Resume'
 import Sidebar from './components/Sidebar/Sidebar'
 
 
@@ -22,7 +22,7 @@ function App() {
   return (
     <div className="App">
       <Sidebar />
-      <Main />
+      <Resume />
     </div>
   )
 }

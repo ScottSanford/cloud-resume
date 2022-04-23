@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bitter:wght@300;400;700&family=Open+Sans:wght@300;400;700&display=swap');
 
 :root {
   --color-primary: #145DA0;
-  --color-primary-light: #7ed56f;
-  --color-primary-dark: #28b485;
+  --color-primary-light: #2E8BC0;
+  --color-primary-dark: #0C2D48;
 
   --color-secondary-light: #ffb900;
   --color-secondary-dark: #ff7730;
@@ -14,7 +14,7 @@
   --color-grey-light-1: #f7f7f7;
   --color-grey-light-2: #eee;
 
-  --color-grey-dark: #777;
+  --color-grey-dark: #343a40;
   --color-grey-dark-2: #999;
   --color-grey-dark-3: #333;
 
@@ -43,7 +43,7 @@
 
 html {
   box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 62.5%; /* 1rem = 10px, 10px/16px (browser default) */
 }
 
@@ -51,10 +51,23 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--color-grey-dark);
 }
 
 @media only screen and (max-width: 59.357em) {
   html {
       font-size: 56.25%;
   }
+}
+
+h1 {
+  font-family: 'Bitter';
+  font-size: 6rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: var(--default-font-size);
 }
