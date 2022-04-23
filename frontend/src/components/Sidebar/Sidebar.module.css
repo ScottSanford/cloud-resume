@@ -1,19 +1,17 @@
 .container {
 	background: var(--color-primary);
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    font-size: var(--default-font-size);
-    justify-content: center;
-    position: fixed;
-    min-height: 100%;
-    width: 275px;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	font-size: var(--default-font-size);
+	justify-content: center;
+	position: fixed;
+	min-height: 100%;
+	width: 275px;
 }
 
-@media only screen and (max-width: 59.357em) {
-	.container {
-		display: none;
-	}
+.name {
+	display: none;
 }
 
 .imageContainer {
@@ -31,6 +29,10 @@
 	transform: translateX(2rem) translateY(3rem) scale(1.4)
 }
 
+.navCheckbox {
+	display: none;
+}
+
 .navList {
 	list-style-type: none;
 	text-align: center;
@@ -38,6 +40,57 @@
 
 .navItem {
 	padding: 10px 0;
+}
+
+.navButton {
+	display: none;
+}
+
+.navIcon {
+	margin-top: 3.5rem;
+	position: relative;
+
+}
+.navIcon,
+.navIcon::before,
+.navIcon::after {
+	background-color: var(--color-white);
+	display: inline-block;
+	height: 2px;
+	width: 3rem;
+}
+
+.navIcon::before,
+.navIcon::after {
+	content: '';
+	left: 0;
+	position: absolute;
+	transition: all .2s;
+}
+
+.navIcon::before {top: -.8rem;}
+.navIcon::after {top: .8rem;}
+
+.navButton:hover .navIcon:before {
+	top: -1rem;
+}
+
+.navButton:hover .navIcon:after {
+	top: 1rem;
+}
+
+.navCheckbox:checked + .navButton .navIcon {
+   background-color: transparent;
+}
+
+.navCheckbox:checked + .navButton .navIcon::before {
+   top: 0;
+   transform: rotate(135deg);
+}
+
+.navCheckbox:checked + .navButton .navIcon::after {
+   top: 0;
+   transform: rotate(-135deg);
 }
 
 .navLink {
@@ -53,6 +106,54 @@
 	color: rgba(255, 255, 255, .75);
 }
 
-.navLink:active {
+.isActive{
 	color: var(--color-white);
+}
+
+@media only screen and (max-width: 59.357em) {
+	.container {
+		align-items: center;
+		color: var(--color-white);
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		min-height: 60px;
+		padding: 0 3rem;
+		width: 100%;
+	}
+
+	.name {
+		display: block;
+	}
+
+	.imageContainer {
+		display: none;
+	}
+
+	.navButton {
+		display: block;
+		border-radius: 50%;
+		cursor: pointer;
+		height: 7rem;
+		text-align: center;
+		width: 7rem;
+	}
+
+	.navList {
+		background: var(--color-primary-dark);
+		left: 0;
+		opacity: 0;
+		position: fixed;
+		top: 60px;
+		transition: all 1s cubic-bezier(0.68, -.55, 0.265, 1.35);
+		width: 100%;
+		z-index: 1500;
+		transform: translateY(-200%);
+	}
+
+	.navCheckbox:checked ~ .navList {
+		opacity: 1;
+		width: 100%;
+		transform: translateY(0%);
+	}
 }

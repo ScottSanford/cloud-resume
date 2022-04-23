@@ -1,28 +1,54 @@
-import React from 'react'
+import React, { useState } from 'react'
 import css from './Sidebar.module.css'
 import profile from '../../img/profile.jpeg'
 import { Link } from 'react-scroll'
+import classNames from 'classnames'
 
-const SMOOTH_VALUE = 'easeInOutQuart'
-const OFFSET = 50
-const DURATION = 1000
+type Navigation = 'about' | 'experience' | 'education' | 'skills' | 'certifications'
+const navigation = ['about', 'experience', 'education', 'skills', 'certifications']
 
 const Sidebar: React.FC = () => {
+
+  const [isActive, setIsActive] = useState<Navigation>('about')
+
   return (
-    <nav className={css.container}>
+    <section className={css.container}>
+      <h3 className={css.name}>Resume</h3>
       <div className={css.imageContainer}>
         <img src={profile} className={css.image} alt='profile' />
       </div>
-      <div>
-      <ul className={css.navList}>
-          <li className={css.navItem}><Link to='about' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>About</Link></li>
-          <li className={css.navItem}><Link to='experience' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Experience</Link></li>
-          <li className={css.navItem}><Link to='education' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Education</Link></li>
-          <li className={css.navItem}><Link to='skills' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Skills</Link></li>
-          <li className={css.navItem}><Link to='certifications' smooth={SMOOTH_VALUE} offset={OFFSET} duration={DURATION} className={css.navLink}>Certifications</Link></li>
-      </ul>
-      </div>
-    </nav>
+
+      <nav className={css.navigation}>
+        <input type="checkbox" className={css.navCheckbox} id="navi-toggle" />
+        <label htmlFor="navi-toggle" className={css.navButton}>
+            <span className={css.navIcon}>&nbsp;</span>
+        </label>
+
+        <ul className={css.navList}>
+            {navigation.map((navItem) => {
+              return (
+                <li key={navItem}
+                  className={css.navItem}
+                  >
+                  <Link
+                    to={navItem}
+                    smooth='easeInOutQuart'
+                    offset={50}
+                    duration={1000}
+                    onClick={() => setIsActive(navItem as Navigation)}
+                    className={classNames(
+                      css.navLink,
+                      { [css.isActive]: isActive === navItem }
+                    )}>
+                      {navItem}
+                    </Link>
+                </li>
+              )
+            })}
+        </ul>
+      </nav>
+
+    </section>
   )
 }
 
