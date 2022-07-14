@@ -1,13 +1,25 @@
 version = 0.1
-[default]
-[default.deploy]
-[default.deploy.parameters]
-stack_name = "cloud-resume"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-abcdefghijkl"
-s3_prefix = "cloud-resume"
+
+[test.deploy.parameters]
+stack_name = "test-cloud-resume"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1fy5x7vki2wu4"
+s3_prefix = "test-cloud-resume"
 region = "us-east-1"
 profile = "iamadmin-general"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-disable_rollback = true
+disable_rollback = false
 image_repositories = []
+parameter_overrides = "ApiDomainNameParameter=\"testapi\" DomainNameParameter=\"scottsanford.io\" Environment=\"test\" HostedZoneParameter=\"Z0700654CIOR7MZZYAUR\" WebsiteDomainNameParameter=\"testresume\""
+
+[prod.deploy.parameters]
+stack_name = "prod-cloud-resume"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1fy5x7vki2wu4"
+s3_prefix = "prod-cloud-resume"
+region = "us-east-1"
+profile = "iamadmin-general"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = false
+image_repositories = []
+parameter_overrides = "ApiDomainNameParameter=\"api\" DomainNameParameter=\"scottsanford.io\" Environment=\"prod\" HostedZoneParameter=\"Z0700654CIOR7MZZYAUR\" WebsiteDomainNameParameter=\"resume\""

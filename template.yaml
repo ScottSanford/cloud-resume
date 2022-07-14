@@ -1,14 +1,39 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  sam-app-hello-world
+  Cloud Resume
 
-  Sample SAM Template for sam-app-hello-world
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
+
+Parameters:
+  ApiDomainNameParameter:
+    Type: String
+    Description: The subdomain of the API
+    AllowedValues:
+      - testapi
+      - api
+  DomainNameParameter:
+    Type: String
+    Description: The domain name of the site
+    Default: scottsanford.io
+  Environment:
+    Type: String
+    Description: stage / alias name to be used in deployment
+    AllowedValues:
+      - test
+      - prod
+  HostedZoneParameter:
+    Type: String
+    Description: The hosted zone for the Route53 records
+    Default: Z0700654CIOR7MZZYAUR
+  WebsiteDomainNameParameter:
+    Type: String
+    Description: The subdomain of the API
+    AllowedValues:
+      - testresume
+      - resume
 
 Resources:
   MyResumeWebsite:
@@ -17,13 +42,13 @@ Resources:
       AccessControl: Private
       WebsiteConfiguration:
         IndexDocument: index.html
-      BucketName: sanford-cloud-resume
+      BucketName: !Sub ${Environment}-cloud-resume
       Tags:
         - Key: description
           Value: "Private S3 Bucket with static files"
 
   BucketPolicy:
-    Type: "AWS::S3::BucketPolicy"
+    Type: AWS::S3::BucketPolicy
     Properties:
       PolicyDocument:
         Id: MyPolicy
@@ -31,9 +56,9 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}'
-            Action: 's3:GetObject'
-            Resource: arn:aws:s3:::sanford-cloud-resume/*
+              AWS: !Sub "arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOriginIdentity}"
+            Action: "s3:GetObject"
+            Resource: !Sub arn:aws:s3:::${Environment}-cloud-resume/*
       Bucket: !Ref MyResumeWebsite
 
   ResumeCloudFrontDistribution:
@@ -41,12 +66,12 @@ Resources:
     Properties:
       DistributionConfig:
         Aliases:
-          - resume.scottsanford.io
+          - !Join ["", [!Ref WebsiteDomainNameParameter, ".", !Ref DomainNameParameter]]
         Origins:
-          - DomainName: sanford-cloud-resume.s3.amazonaws.com
+          - DomainName: !Sub ${Environment}-cloud-resume.s3.amazonaws.com
             Id: S3-private-resume-bucket
             S3OriginConfig:
-              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOriginIdentity}'
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginIdentity}"
         Enabled: "true"
         Comment: CloudFront distribution for my resume site
         DefaultRootObject: index.html
@@ -55,8 +80,11 @@ Resources:
             - GET
             - HEAD
           TargetOriginId: S3-private-resume-bucket
+          DefaultTTL: 0
+          MinTTL: 0
+          MaxTTL: 0
           ForwardedValues:
-            QueryString: 'false'
+            QueryString: "false"
             Cookies:
               Forward: none
           ViewerProtocolPolicy: redirect-to-https
@@ -68,14 +96,15 @@ Resources:
     Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
     Properties:
       CloudFrontOriginAccessIdentityConfig:
-        Comment: 'origin identity'
+        Comment: "origin identity"
 
   MyRoute53Record:
-    Type: "AWS::Route53::RecordSetGroup"
+    Type: AWS::Route53::RecordSetGroup
     Properties:
-      HostedZoneId: Z0700654CIOR7MZZYAUR
+      HostedZoneId:
+        Ref: HostedZoneParameter
       RecordSets:
-        - Name: resume.scottsanford.io
+        - Name: !Join ["", [!Ref WebsiteDomainNameParameter, ".", !Ref DomainNameParameter]]
           Type: A
           AliasTarget:
             HostedZoneId: Z2FDTNDATAQYW2
@@ -84,31 +113,58 @@ Resources:
   MyCertificate:
     Type: AWS::CertificateManager::Certificate
     Properties:
-      DomainName: resume.scottsanford.io
+      DomainName: !Join ["", ["*.", !Ref DomainNameParameter]]
+      SubjectAlternativeNames:
+        - !Ref DomainNameParameter
+        - !Join ["", ["*.", !Ref DomainNameParameter]]
+      DomainValidationOptions:
+        - DomainName: !Ref DomainNameParameter
+          HostedZoneId:
+            Ref: HostedZoneParameter
       ValidationMethod: DNS
 
-  GetLambdaFunction:
+  CloudResumeApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub ${Environment}-cloud-resume-agw
+      StageName: !Ref Environment
+      OpenApiVersion: 3.0.1 # Fixes the stage Stage that SAM creates.
+      Domain:
+        DomainName:
+          !Join ["", [!Ref ApiDomainNameParameter, ".", !Ref DomainNameParameter]]
+        CertificateArn: !Ref MyCertificate
+        Route53:
+          HostedZoneId:
+            Ref: HostedZoneParameter
+
+  CountLambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: get-function/
-      Handler: app.getHandler
+      FunctionName: !Sub ${Environment}_count_lambda
+      CodeUri: count/
+      Handler: index.count
       Runtime: nodejs14.x
       Architectures:
         - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Sub ${Environment}-cloud-resume-table
       Events:
         ApiEvent:
           Type: Api
           Properties:
-            Path: /get
-            Method: get
+            Path: /count
+            Method: GET
+            RestApiId:
+              Ref: CloudResumeApiGateway
       Policies:
         - DynamoDBCrudPolicy:
-            TableName: CloudResumeTable
+            TableName: !Sub ${Environment}-cloud-resume-table
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: CloudResumeTable
+      TableName: !Sub ${Environment}-cloud-resume-table
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: "ID"
@@ -116,9 +172,3 @@ Resources:
       KeySchema:
         - AttributeName: "ID"
           KeyType: "HASH"
-
-Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  CounterApi:
-    Description: "API Gateway endpoint URL for Prod stage function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

@@ -4,7 +4,7 @@ import Resume from './components/Resume/Resume'
 import Sidebar from './components/Sidebar/Sidebar'
 
 
-const API_URL = 'https://x534x9hk9k.execute-api.us-east-1.amazonaws.com/Prod/get'
+const API_URL = 'https://api.scottsanford.io/count'
 
 function App() {
 
