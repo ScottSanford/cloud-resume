@@ -9,27 +9,24 @@ const params = {
 	ReturnValues: 'UPDATED_NEW'
 }
 
-// function getOrigin(event) {
+function getOrigin(event) {
 
-// 	let origin = 'https://resume.scottsanford.io'
+	let origin = 'https://resume.scottsanford.io'
 
-//     if (event.headers !== null && event.headers !== undefined && event.headers['origin'] !== undefined) {
+	if (!event.headers && !event.headers.origin) {
+		return origin
+	}
 
-//             console.log('Received origin header: ' + event.headers.origin)
+	if(event.headers.origin === 'http://localhost:3000'
+		|| event.headers.origin === 'https://testresume.scottsanford.io'
+	) {
+		origin = event.headers.origin
+	}
 
-//             if(event.headers.origin === 'http://localhost:3000') {
-//                 origin = event.headers.origin
-//             }
-//     } else {
-//         console.log('No origin header received')
-//     }
-
-// 	return origin
-// }
+	return origin
+}
 
 exports.count = async function (event) {
-	// console.log('event', event)
-	// const origin = getOrigin(event)
 
 	try {
 		const response = await documentClient.update(params).promise()
@@ -37,7 +34,7 @@ exports.count = async function (event) {
 		return {
 			statusCode: 200,
 			headers: {
-				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Origin': getOrigin(event),
 				'Access-Control-Allow-Methods': 'GET',
 				'Access-Control-Allow-Headers': 'Content-Type',
 			},
