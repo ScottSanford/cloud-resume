@@ -2,7 +2,9 @@ name: Cloud Resume Frontend
 
 on:
   push:
-    branches: [main, production]
+    branches:
+      - main
+      - production
     paths: [frontend/**]
 
 env:
