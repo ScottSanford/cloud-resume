@@ -2,11 +2,13 @@ name: Cloud Resume Frontend
 
 on:
   push:
-    branches: [main]
+    branches: [main, production]
     paths: [frontend/**]
 
 env:
   AWS_REGION : 'us-east-1'
+  ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'test' || github.ref == 'refs/heads/production' && 'prod' }}
+  CLOUDFRONT_DISTRUBTION: ${{ github.ref == 'refs/heads/main' && secrets.TEST_CLOUDFRONT_DISTRIBUTION_ID || github.ref == 'refs/heads/production' && secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }}
 
 jobs:
   test:
@@ -56,7 +58,7 @@ jobs:
     - name: Invalidate CloudFront Cache
       uses: chetan/invalidate-cloudfront-action@v2
       env:
-        DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+        DISTRIBUTION: ${{ env.CLOUDFRONT_DISTRUBTION }}
         PATHS: /index.html /static/*
         AWS_REGION: 'us-east-1'
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
