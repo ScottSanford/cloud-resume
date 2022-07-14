@@ -9,6 +9,7 @@ env:
   AWS_REGION : 'us-east-1'
   ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'test' || github.ref == 'refs/heads/production' && 'prod' }}
   CLOUDFRONT_DISTRUBTION: ${{ github.ref == 'refs/heads/main' && secrets.TEST_CLOUDFRONT_DISTRIBUTION_ID || github.ref == 'refs/heads/production' && secrets.PROD_CLOUDFRONT_DISTRIBUTION_ID }}
+  S3_BUCKET: ${{ github.ref == 'refs/heads/main' && secrets.TEST_AWS_S3_BUCKET || github.ref == 'refs/heads/production' && secrets.PROD_AWS_S3_BUCKET }}
 
 jobs:
   test:
@@ -39,7 +40,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        aws-region: ${{env.AWS_REGION}}
     - run: |
         cd frontend && npm ci && npm run build
 
@@ -49,7 +50,7 @@ jobs:
         args: --delete --follow-symlinks
       env:
         SOURCE_DIR: './frontend/build'
-        AWS_REGION: 'us-east-1'
+        AWS_REGION: ${{env.AWS_REGION}}
         AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -60,6 +61,6 @@ jobs:
       env:
         DISTRIBUTION: ${{ env.CLOUDFRONT_DISTRUBTION }}
         PATHS: /index.html /static/*
-        AWS_REGION: 'us-east-1'
+        AWS_REGION: ${{env.AWS_REGION}}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
