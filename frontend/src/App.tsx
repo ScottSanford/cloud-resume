@@ -6,7 +6,7 @@ import Sidebar from './components/Sidebar/Sidebar'
 
 function getDomain(hostname: string): string {
 
-  // local development and testing
+  // production
   if (/^resume\.scottsanford\.io$/.test(hostname)) {
     return `https://api.scottsanford.io`
   }
