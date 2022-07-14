@@ -4,9 +4,20 @@ import Resume from './components/Resume/Resume'
 import Sidebar from './components/Sidebar/Sidebar'
 
 
-const API_URL = 'https://api.scottsanford.io/count'
+function getDomain(hostname: string): string {
 
-function App() {
+  // local development and testing
+  if (/^resume\.scottsanford\.io$/.test(hostname)) {
+    return `https://api.scottsanford.io`
+  }
+
+  // everything else (local & test env)
+  return 'https://testapi.scottsanford.io'
+}
+
+const API_URL = `${getDomain(window.location.hostname)}/count`
+
+function App(): JSX.Element {
 
   const [visitorCount, setVisitorCount] = useState<number>()
 

@@ -3,6 +3,7 @@ name: Cloud Resume Frontend
 on:
   push:
     branches: [main, production]
+    # We only want to trigger this workflow if a change in the frontend folder has been made.
     paths: [frontend/**]
 
 env:
