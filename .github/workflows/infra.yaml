@@ -23,7 +23,7 @@ jobs:
           node-version: "12.x"
       - run: npm ci
         working-directory: ./count
-      - run: npm test
+      - run: npm run test:ci
         working-directory: ./count
 
   build-and-deploy:
