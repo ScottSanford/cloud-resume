@@ -24,6 +24,7 @@ jobs:
       - run: npm ci
         working-directory: ./count
       - run: npm test
+        working-directory: ./count
 
   build-and-deploy:
     needs: test
