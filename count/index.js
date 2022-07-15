@@ -1,5 +1,6 @@
-const getOrigin = require('./get-origin')
 const { UpdateItemCommand } = require('@aws-sdk/client-dynamodb')
+const { unmarshall } = require('@aws-sdk/util-dynamodb')
+const getOrigin = require('./get-origin')
 const { dynamoDBClient } = require('./ddb-client')
 
 const params = {
@@ -25,7 +26,7 @@ exports.count = async function (event) {
 				'Access-Control-Allow-Methods': 'GET',
 				'Access-Control-Allow-Headers': 'Content-Type',
 			},
-			body: JSON.stringify(Attributes)
+			body: JSON.stringify(unmarshall(Attributes))
 		}
 
 	} catch (error) {

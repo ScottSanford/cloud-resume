@@ -6,7 +6,8 @@
 		"test:watch": "jest --watchAll"
 	},
 	"dependencies": {
-		"@aws-sdk/client-dynamodb": "^3.130.0"
+		"@aws-sdk/client-dynamodb": "^3.130.0",
+		"@aws-sdk/util-dynamodb": "^3.131.0"
 	},
 	"devDependencies": {
 		"jest": "^28.1.3"

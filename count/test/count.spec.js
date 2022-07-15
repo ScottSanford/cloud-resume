@@ -13,7 +13,7 @@ const ddbSuccessMockValue = {
 		httpStatusCode: 200
 	},
 	Attributes: {
-		visitorCount: 100
+		visitorCount: {N: 100}
 	}
 }
 
