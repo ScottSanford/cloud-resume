@@ -25,7 +25,7 @@ function App(): JSX.Element {
     fetch(API_URL)
       .then((response) => response.json())
       .then((document) => {
-        setVisitorCount(document.Attributes.visitorCount)
+        setVisitorCount(document.visitorCount)
       })
   }, [])
 

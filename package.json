@@ -3,25 +3,15 @@
   "version": "1.0.0",
   "description": "This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.",
   "main": "index.js",
-  "scripts": {
-    "test": "jest"
-  },
-  "jest": {
-    "testPathIgnorePatterns": ["frontend"]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ScottSanford/cloud-resume.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Scott Sanford",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ScottSanford/cloud-resume/issues"
   },
-  "homepage": "https://github.com/ScottSanford/cloud-resume#readme",
-  "devDependencies": {
-    "@types/jest": "^27.4.1",
-    "jest": "^27.5.1"
-  }
+  "homepage": "https://github.com/ScottSanford/cloud-resume#readme"
 }
