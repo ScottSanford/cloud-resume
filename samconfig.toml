@@ -1,5 +1,8 @@
 version = 0.1
 
+[default.build.parameters]
+beta_features = true
+
 [test.deploy.parameters]
 stack_name = "test-cloud-resume"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1fy5x7vki2wu4"

@@ -66,7 +66,10 @@ Resources:
     Properties:
       DistributionConfig:
         Aliases:
-          - !Join ["", [!Ref WebsiteDomainNameParameter, ".", !Ref DomainNameParameter]]
+          - !Join [
+              "",
+              [!Ref WebsiteDomainNameParameter, ".", !Ref DomainNameParameter],
+            ]
         Origins:
           - DomainName: !Sub ${Environment}-cloud-resume.s3.amazonaws.com
             Id: S3-private-resume-bucket
@@ -104,7 +107,11 @@ Resources:
       HostedZoneId:
         Ref: HostedZoneParameter
       RecordSets:
-        - Name: !Join ["", [!Ref WebsiteDomainNameParameter, ".", !Ref DomainNameParameter]]
+        - Name:
+            !Join [
+              "",
+              [!Ref WebsiteDomainNameParameter, ".", !Ref DomainNameParameter],
+            ]
           Type: A
           AliasTarget:
             HostedZoneId: Z2FDTNDATAQYW2
@@ -131,7 +138,10 @@ Resources:
       OpenApiVersion: 3.0.1 # Fixes the stage Stage that SAM creates.
       Domain:
         DomainName:
-          !Join ["", [!Ref ApiDomainNameParameter, ".", !Ref DomainNameParameter]]
+          !Join [
+            "",
+            [!Ref ApiDomainNameParameter, ".", !Ref DomainNameParameter],
+          ]
         CertificateArn: !Ref MyCertificate
         Route53:
           HostedZoneId:
@@ -139,6 +149,14 @@ Resources:
 
   CountLambdaFunction:
     Type: AWS::Serverless::Function
+    Metadata: # Manage esbuild properties
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - index.ts
     Properties:
       FunctionName: !Sub ${Environment}_count_lambda
       CodeUri: count/

@@ -1,5 +1,6 @@
-const lambda = require('../index')
-const { dynamoDBClient } = require('../ddb-client')
+import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { count, LambdaError } from '../index'
+import { dynamoDBClient } from '../ddb-client'
 
 jest.mock('../ddb-client')
 jest.mock('../get-origin', () => {
@@ -7,6 +8,10 @@ jest.mock('../get-origin', () => {
 		return 'testorigin'
 	})
 })
+
+const mockedDynamoDBClient = dynamoDBClient as jest.Mocked<typeof dynamoDBClient>
+
+const eventMock = {} as APIGatewayEvent
 
 const ddbSuccessMockValue = {
 	$metadata: {
@@ -31,25 +36,25 @@ const ddbFailedMockValue = {
 describe('Lambda Function - Count', () => {
 
 	beforeEach(() => {
-		dynamoDBClient.send.mockResolvedValue(ddbSuccessMockValue)
+		mockedDynamoDBClient.send.mockResolvedValue(ddbSuccessMockValue as never)
 	})
 
 	it('should return a 200 status code', async () => {
 
-		const response = await lambda.count()
+		const response = await count(eventMock)
 		expect(response.statusCode).toBe(200)
 	})
 
 	it('should return a visitor count of 100', async () => {
 
-		const response = await lambda.count()
+		const response = await count(eventMock) as APIGatewayProxyResult
 		const body = JSON.parse(response.body)
 		expect(body.visitorCount).toBe(100)
 	})
 
 	it('should return an error if the call fails', async () => {
-		dynamoDBClient.send.mockRejectedValue(ddbFailedMockValue)
-		const response = await lambda.count()
+		mockedDynamoDBClient.send.mockRejectedValue(ddbFailedMockValue as never)
+		const response = await count(eventMock) as LambdaError
 
 		expect(response.errorType).toBe('ValidationException')
 		expect(response.statusCode).toBe(400)
