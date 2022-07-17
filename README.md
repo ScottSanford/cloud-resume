@@ -2,7 +2,7 @@
 
 A serverless resume web app built entirely with AWS Serverless technologies.
 
-<p align="center">
+<p>
   <img src="./cloud-resume-architecture.png" width="600"/>
 </p>
 
