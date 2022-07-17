@@ -1,130 +1,102 @@
-# sam-app-hello-world
+# Cloud Resume README
 
-This project contains source code and supporting files for a serverless application that you can deploy with the SAM CLI. It includes the following files and folders.
+![Infrastructure Workflow](https://github.com/ScottSanford/cloud-resume/actions/workflows/infra.yaml/badge.svg)
 
-- hello_world - Code for the application's Lambda function.
-- events - Invocation events that you can use to invoke the function.
-- tests - Unit tests for the application code. 
-- template.yaml - A template that defines the application's AWS resources.
+![Frontend Workflow](https://github.com/ScottSanford/cloud-resume/actions/workflows/frontend.yaml/badge.svg)
 
-The application uses several AWS resources, including Lambda functions and an API Gateway API. These resources are defined in the `template.yaml` file in this project. You can update the template to add AWS resources through the same deployment process that updates your application code.
+Production Environment: [https://resume.scottsanford.io](https://resume.scottsanford.io)
 
-If you prefer to use an integrated development environment (IDE) to build and test your application, you can use the AWS Toolkit.  
-The AWS Toolkit is an open source plug-in for popular IDEs that uses the SAM CLI to build and deploy serverless applications on AWS. The AWS Toolkit also adds a simplified step-through debugging experience for Lambda function code. See the following links to get started.
+Test Environment: [https://testresume.scottsanford.io](https://testresume.scottsanford.io)
 
-* [CLion](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [GoLand](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [IntelliJ](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [WebStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [Rider](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PhpStorm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [PyCharm](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [RubyMine](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [DataGrip](https://docs.aws.amazon.com/toolkit-for-jetbrains/latest/userguide/welcome.html)
-* [VS Code](https://docs.aws.amazon.com/toolkit-for-vscode/latest/userguide/welcome.html)
-* [Visual Studio](https://docs.aws.amazon.com/toolkit-for-visual-studio/latest/user-guide/welcome.html)
+<p align="center">
+  <img src="./cloud-resume-architecture.png" width="600"/>
+</p>
 
-## Deploy the sample application
+A serverless resume web app built entirely with AWS Serverless technologies.
 
-The Serverless Application Model Command Line Interface (SAM CLI) is an extension of the AWS CLI that adds functionality for building and testing Lambda applications. It uses Docker to run your functions in an Amazon Linux environment that matches Lambda. It can also emulate your application's build environment and API.
+## Goal
 
-To use the SAM CLI, you need the following tools.
+To replicate a real-world software development lifecycle (SDLC) scenario!
 
-* SAM CLI - [Install the SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
-* [Python 3 installed](https://www.python.org/downloads/)
-* Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
+Today, most companies rely on multiple engineers to complete one part of the stack. This project represents all 3 phases of the stack (Frontend, Backend, DevOps/Infrastructure).
 
-To build and deploy your application for the first time, run the following in your shell:
+Below are my considerations for all 3 phases.
 
-```bash
-sam build --use-container
-sam deploy --guided
-```
+## Phase I (Frontend)
 
-The first command will build the source of your application. The second command will package and deploy your application to AWS, with a series of prompts:
+The frontend is built with React, TypeScript, & CSS Modules. These are very common frontend technologies used by many engineering teams. Additionally, unit tests were written to ensure confidence when pushing environment deployments. While building the frontend, these were some other considerations I kept in mind:
 
-* **Stack Name**: The name of the stack to deploy to CloudFormation. This should be unique to your account and region, and a good starting point would be something matching your project name.
-* **AWS Region**: The AWS region you want to deploy your app to.
-* **Confirm changes before deploy**: If set to yes, any change sets will be shown to you before execution for manual review. If set to no, the AWS SAM CLI will automatically deploy application changes.
-* **Allow SAM CLI IAM role creation**: Many AWS SAM templates, including this example, create AWS IAM roles required for the AWS Lambda function(s) included to access AWS services. By default, these are scoped down to minimum required permissions. To deploy an AWS CloudFormation stack which creates or modifies IAM roles, the `CAPABILITY_IAM` value for `capabilities` must be provided. If permission isn't provided through this prompt, to deploy this example you must explicitly pass `--capabilities CAPABILITY_IAM` to the `sam deploy` command.
-* **Save arguments to samconfig.toml**: If set to yes, your choices will be saved to a configuration file inside the project, so that in the future you can just re-run `sam deploy` without parameters to deploy changes to your application.
+- Site responsiveness (media queries)
+- Consistent theming (fonts, colors, padding)
+- Gracefully handle different states (success and failures)
 
-You can find your API Gateway Endpoint URL in the output values displayed after deployment.
+## Phase II (Backend)
 
-## Use the SAM CLI to build and test locally
+The backend consists of 3 different AWS Serverless technologies: API Gateway, Lambda, & DynamoDB.
 
-Build your application with the `sam build --use-container` command.
+1. API Gateway
 
-```bash
-sam-app-hello-world$ sam build --use-container
-```
+    The entry point into the REST API. There are 2 different environment endpoints used in this project: [testapi.scottsanford.io](http://testapi.scottsanford.io) & api.scottsanford.io (*test* and *production* respectively).
 
-The SAM CLI installs dependencies defined in `hello_world/requirements.txt`, creates a deployment package, and saves it in the `.aws-sam/build` folder.
+2. Lambda
 
-Test a single function by invoking it directly with a test event. An event is a JSON document that represents the input that the function receives from the event source. Test events are included in the `events` folder in this project.
+    I decided to use TypeScript to built out my function. Using AWS SAM, I was able to transpile my function code into JavaScript in order for my function to run in a NodeJS Lambda environment. Here were some additional considerations I made:
 
-Run functions locally and invoke them with the `sam local invoke` command.
+    - Using the JavaScript AWS-SDK V3. Version 3 is a modular approach to V2 while also including TypeScript support.
+    - Separation of concerns. Each file should include a singular purpose. This also helped out when writing unit tests.
+    - Unit test lambda function using Jest.
 
-```bash
-sam-app-hello-world$ sam local invoke HelloWorldFunction --event events/event.json
-```
+    While this project was small in scope, here were some improvement considerations if I were to consider making additional improvements:
 
-The SAM CLI can also emulate your application's API. Use the `sam local start-api` to run the API locally on port 3000.
+    - Lambda layers for sharing code libraries across multiple functions. Helps reduce size of upload archives and faster deployments.
+    - Consider using AWS X-Ray for a distributed tracing system. AWS X-Ray helps developers analyze and debug production, distributed applications, such as those built using a microservices architecture.
+3. DynamoDB
 
-```bash
-sam-app-hello-world$ sam local start-api
-sam-app-hello-world$ curl http://localhost:3000/
-```
+    This project uses AWS’s Serverless NoSQL Database, DynamoDB. Using a simple database item, I was able to write a single API call to update and retrieve the app’s visitor count. While in most applications you would typically use separate API calls (GET & POST), I decided to take advantage of Dynamo’s *`ReturnValues*: **'UPDATED_NEW'`. This returns the updated value after an attribute has been updated.
 
-The SAM CLI reads the application template to determine the API's routes and the functions that they invoke. The `Events` property on each function's definition includes the route and method for each path.
 
-```yaml
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /hello
-            Method: get
-```
+## Phase III (DevOps/Infrastructure)
 
-## Add a resource to your application
-The application template uses AWS Serverless Application Model (AWS SAM) to define application resources. AWS SAM is an extension of AWS CloudFormation with a simpler syntax for configuring common serverless application resources such as functions, triggers, and APIs. For resources not included in [the SAM specification](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md), you can use standard [AWS CloudFormation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) resource types.
+1. Route53 & AWS Certificate Manager
 
-## Fetch, tail, and filter Lambda function logs
+    I purchased my own domain *[scottsanford.io](http://scottsanford.io)* to host my application. This domain was purchased through Route53 and am using a public hosted zone. I am also using the AWS Certificate Manager to manage SSL/TLS certificates to ensure encryption communication between the client and server.
 
-To simplify troubleshooting, SAM CLI has a command called `sam logs`. `sam logs` lets you fetch logs generated by your deployed Lambda function from the command line. In addition to printing the logs on the terminal, this command has several nifty features to help you quickly find the bug.
+2. CloudFront
 
-`NOTE`: This command works for all AWS Lambda functions; not just the ones you deploy using SAM.
+    I am using a CloudFront distribution in front of my static files located in my S3 bucket. This speeds up distribution of the static files to end users. Additionally, I am using an Origin Access Identity (OAI) to restrict users from directly accessing my static files. Users must go directly through the CloudFront distribution.
 
-```bash
-sam-app-hello-world$ sam logs -n HelloWorldFunction --stack-name sam-app-hello-world --tail
-```
+3. S3
 
-You can find more information and examples about filtering Lambda function logs in the [SAM CLI Documentation](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-logging.html).
+    Static files are stored as object storage in an S3 bucket. The bucket is kept private while ensuring the CloudFront distribution is the only accessible identity to the bucket.
 
-## Tests
+4. AWS SAM
 
-Tests are defined in the `tests` folder in this project. Use PIP to install the test dependencies and run tests.
+    This entire project uses AWS SAM to build and deploy my serverless stack. Using a `template.yaml` file to declaratively build out resources, I am able to
 
-```bash
-sam-app-hello-world$ pip install -r tests/requirements.txt --user
-# unit test
-sam-app-hello-world$ python -m pytest tests/unit -v
-# integration test, requiring deploying the stack first.
-# Create the env variable AWS_SAM_STACK_NAME with the name of the stack we are testing
-sam-app-hello-world$ AWS_SAM_STACK_NAME=<stack-name> python -m pytest tests/integration -v
-```
+    One SAM consideration: I had to use different stack names per environment. If I used a single stack name, the latest environment deployment would override the existing resources instead of create or modify the correct resource.
 
-## Cleanup
+5. GitHub & GitHub Actions
 
-To delete the sample application that you created, use the AWS CLI. Assuming you used your project name for the stack name, you can run the following:
+    Two workflows were created for this project: Infrastructure and Frontend. These workflows are pushed on specific branches (*main* & *production*) as well as when certain file changes have been committed. Unit tests are automatically ran to ensure confidence before deployments. Deployments happen automatically using AWS credentials stored in GitHub Actions Secrets.
 
-```bash
-aws cloudformation delete-stack --stack-name sam-app-hello-world
-```
+    When deploying static files up to S3, I also invalidate the CloudFront cache so users can see the latest changes.
 
-## Resources
+6. Multiple Environments
 
-See the [AWS SAM developer guide](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) for an introduction to SAM specification, the SAM CLI, and serverless application concepts.
+    I’ve built out multiple environments (*test* and *production*) to simulate an actual team workflow. Each environment corresponds to a specific branch: *main* for the testing environment and *production* for the production environment. Using multiple environments keeps a team productive. ****Having multiple environments enables a team to work on parallel development efforts. If there are several people working on the app, using a different environment helps keep the team productive. This also provides the team with a level of confidence.
 
-Next, you can use AWS Serverless Application Repository to deploy ready to use Apps that go beyond hello world samples and learn how authors developed their applications: [AWS Serverless Application Repository main page](https://aws.amazon.com/serverless/serverlessrepo/)
+    In this project example, the test environment would be the first line of defense against bugs. Here, I can safely deploy new changes without immediately affecting production. Once I have thoroughly tested the recent changes, I can create a Pull Request to merge my *main* branch → *production* branch.
+
+
+## Security Considerations
+
+An important part in developing any application is managing security. Here were the top security considerations I took into account:
+
+1. CORS. Restricting the request origins in my server-side Lambda function where a call originates from.
+2. Use an Origin Access Identity (OAI) on S3 bucket. This keeps your bucket private while restricting access to only your CloudFront distribution.
+3. Enabling SSL/TLS via ACM to ensure communication is encrypted between privacy client & server. This allows the website to use https instead of http.
+4. GitHub Actions Secrets. Do not store sensitive information such as AWS credentials in plaintext inside your workflows. Instead, I stored them in secrets that workflows tap into.
+
+Other considerations: Given the small scope of this project, I would have used AWS System’s Manager Parameter Store or Secrets Manager. However, I felt that would have been overkill in this project. A good use case would be if I had database credentials or if I needed secrets rotation.
+
+Additionally, I also considered using a Lambda Authorizer that would control access to API requests. This was out of the scope for this project but can easily been added in given the serverless nature of the project.
