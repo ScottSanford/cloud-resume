@@ -70,7 +70,7 @@ The backend consists of 3 different AWS Serverless technologies: API Gateway, La
 
     Static files are stored as object storage in an S3 bucket. The bucket is kept private while ensuring the CloudFront distribution is the only accessible identity to the bucket.
 
-4. AWS SAM
+4. Infrastructure as Code (IAC) - AWS SAM
 
     This entire project uses AWS SAM to build and deploy my serverless stack. Using a `template.yaml` file to declaratively build out resources, I am able to
 
@@ -87,6 +87,8 @@ The backend consists of 3 different AWS Serverless technologies: API Gateway, La
     I’ve built out multiple environments (*test* and *production*) to simulate an actual team workflow. Each environment corresponds to a specific branch: *main* for the testing environment and *production* for the production environment. Using multiple environments keeps a team productive. Having multiple environments enables a team to work on parallel development efforts. If there are several people working on the app, using a different environment helps keep the team productive. This also provides the team with a level of confidence.
 
     In this project example, the test environment would be the first line of defense against bugs. Here, I can safely deploy new changes without immediately affecting production. Once I have thoroughly tested the recent changes, I can create a Pull Request to merge my *main* branch → *production* branch.
+
+    Consideration: Given that this was a small side project, I kept both environments within the same AWS account. As an AWS best practice, it's advised to keep each environment isolated with their own AWS account. This could also solve the issue of having different stack names per environment.
 
 
 ## Security Considerations
