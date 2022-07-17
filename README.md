@@ -1,4 +1,10 @@
-# Cloud Resume README
+# Cloud Resume
+
+A serverless resume web app built entirely with AWS Serverless technologies.
+
+<p align="center">
+  <img src="./cloud-resume-architecture.png" width="600"/>
+</p>
 
 ![Infrastructure Workflow](https://github.com/ScottSanford/cloud-resume/actions/workflows/infra.yaml/badge.svg)
 
@@ -7,12 +13,6 @@
 Production Environment: [https://resume.scottsanford.io](https://resume.scottsanford.io)
 
 Test Environment: [https://testresume.scottsanford.io](https://testresume.scottsanford.io)
-
-<p align="center">
-  <img src="./cloud-resume-architecture.png" width="600"/>
-</p>
-
-A serverless resume web app built entirely with AWS Serverless technologies.
 
 ## Goal
 
@@ -45,6 +45,7 @@ The backend consists of 3 different AWS Serverless technologies: API Gateway, La
     - Using the JavaScript AWS-SDK V3. Version 3 is a modular approach to V2 while also including TypeScript support.
     - Separation of concerns. Each file should include a singular purpose. This also helped out when writing unit tests.
     - Unit test lambda function using Jest.
+    - ESLint and Prettier to fix syntax and linting.
 
     While this project was small in scope, here were some improvement considerations if I were to consider making additional improvements:
 
@@ -52,14 +53,14 @@ The backend consists of 3 different AWS Serverless technologies: API Gateway, La
     - Consider using AWS X-Ray for a distributed tracing system. AWS X-Ray helps developers analyze and debug production, distributed applications, such as those built using a microservices architecture.
 3. DynamoDB
 
-    This project uses AWS’s Serverless NoSQL Database, DynamoDB. Using a simple database item, I was able to write a single API call to update and retrieve the app’s visitor count. While in most applications you would typically use separate API calls (GET & POST), I decided to take advantage of Dynamo’s *`ReturnValues*: **'UPDATED_NEW'`. This returns the updated value after an attribute has been updated.
+    This project uses AWS’s Serverless NoSQL Database, DynamoDB. Using a simple database item, I was able to write a single API call to update and retrieve the app’s visitor count. While in most applications you would typically use separate API calls (GET & POST), I decided to take advantage of Dynamo’s `ReturnValues: 'UPDATED_NEW'`. This returns the updated value after an attribute has been updated.
 
 
 ## Phase III (DevOps/Infrastructure)
 
 1. Route53 & AWS Certificate Manager
 
-    I purchased my own domain *[scottsanford.io](http://scottsanford.io)* to host my application. This domain was purchased through Route53 and am using a public hosted zone. I am also using the AWS Certificate Manager to manage SSL/TLS certificates to ensure encryption communication between the client and server.
+    I purchased my own domain scottsanford.io to host my application. This domain was purchased through Route53 and am using a public hosted zone. I am also using the AWS Certificate Manager to manage SSL/TLS certificates to ensure encryption communication between the client and server.
 
 2. CloudFront
 
@@ -75,7 +76,7 @@ The backend consists of 3 different AWS Serverless technologies: API Gateway, La
 
     One SAM consideration: I had to use different stack names per environment. If I used a single stack name, the latest environment deployment would override the existing resources instead of create or modify the correct resource.
 
-5. GitHub & GitHub Actions
+5. CI/CD Pipeline with GitHub Actions
 
     Two workflows were created for this project: Infrastructure and Frontend. These workflows are pushed on specific branches (*main* & *production*) as well as when certain file changes have been committed. Unit tests are automatically ran to ensure confidence before deployments. Deployments happen automatically using AWS credentials stored in GitHub Actions Secrets.
 
@@ -83,7 +84,7 @@ The backend consists of 3 different AWS Serverless technologies: API Gateway, La
 
 6. Multiple Environments
 
-    I’ve built out multiple environments (*test* and *production*) to simulate an actual team workflow. Each environment corresponds to a specific branch: *main* for the testing environment and *production* for the production environment. Using multiple environments keeps a team productive. ****Having multiple environments enables a team to work on parallel development efforts. If there are several people working on the app, using a different environment helps keep the team productive. This also provides the team with a level of confidence.
+    I’ve built out multiple environments (*test* and *production*) to simulate an actual team workflow. Each environment corresponds to a specific branch: *main* for the testing environment and *production* for the production environment. Using multiple environments keeps a team productive. Having multiple environments enables a team to work on parallel development efforts. If there are several people working on the app, using a different environment helps keep the team productive. This also provides the team with a level of confidence.
 
     In this project example, the test environment would be the first line of defense against bugs. Here, I can safely deploy new changes without immediately affecting production. Once I have thoroughly tested the recent changes, I can create a Pull Request to merge my *main* branch → *production* branch.
 
