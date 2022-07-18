@@ -74,7 +74,7 @@ The backend consists of 3 different AWS Serverless technologies: API Gateway, La
 
 4. Infrastructure as Code (IAC) - AWS SAM
 
-    This entire project uses AWS SAM to build and deploy my serverless stack. Using a `template.yaml` file to declaratively build out resources, I am able to
+    This entire project uses AWS SAM to build and deploy my serverless stack. Using an IAC template provides stable & consistent environments to be created efficiently. Additionally, an IAC template provides self-documentation. An engineer can read the template file and know the recipe for a specific stack.
 
     One SAM consideration: I had to use different stack names per environment. If I used a single stack name, the latest environment deployment would override the existing resources instead of create or modify the correct resource.
 
